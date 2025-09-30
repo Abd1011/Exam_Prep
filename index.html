@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mid-Term Exam Battle Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+        }
+        .progress-bar-bg {
+            background-color: #374151; /* bg-gray-700 */
+        }
+        .progress-bar-fg {
+            background-color: #4f46e5; /* bg-indigo-600 */
+        }
+        .tab-active {
+            border-color: #4f46e5;
+            color: #e5e7eb; /* text-gray-200 */
+            background-color: #1f2937; /* bg-gray-800 */
+        }
+        .tab-inactive {
+            border-color: transparent;
+            color: #9ca3af; /* text-gray-400 */
+        }
+        .current-day {
+            border: 2px solid #4f46e5;
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
+        }
+        /* Custom checkbox style */
+        input[type="checkbox"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: #374151;
+            margin-right: 0.75rem;
+            font: inherit;
+            color: #4f46e5;
+            width: 1.15em;
+            height: 1.15em;
+            border: 0.15em solid #4f46e5;
+            border-radius: 0.25em;
+            transform: translateY(-0.075em);
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+        }
+        input[type="checkbox"]::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #4f46e5;
+            transform-origin: bottom left;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="text-gray-200 p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- HEADER -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl sm:text-5xl font-bold text-white">Mid-Term Exam Battle Plan</h1>
+            <p class="text-lg text-indigo-400 mt-2">B.Tech Third Year - IT | Night Owl Edition</p>
+            <div id="countdown-timer" class="mt-4 text-2xl font-semibold bg-gray-800 rounded-lg p-3 inline-block shadow-lg"></div>
+        </header>
+
+        <!-- OVERALL PROGRESS -->
+        <div class="mb-8 p-4 bg-gray-800 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold mb-2 text-white">Overall Preparation Status</h2>
+            <div class="progress-bar-bg rounded-full h-6">
+                <div id="overall-progress-bar" class="progress-bar-fg h-6 text-sm font-medium text-indigo-100 text-center p-1 leading-none rounded-full" style="width: 0%">
+                    <span id="overall-progress-text">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="mb-6 border-b border-gray-700">
+            <nav class="flex space-x-2" aria-label="Tabs">
+                <button id="tab-dashboard" class="tab-btn px-4 py-3 font-medium text-sm rounded-t-lg border-b-2 tab-active">
+                    Dashboard
+                </button>
+                <button id="tab-syllabus" class="tab-btn px-4 py-3 font-medium text-sm rounded-t-lg border-b-2 tab-inactive">
+                    Syllabus
+                </button>
+                <button id="tab-timetable" class="tab-btn px-4 py-3 font-medium text-sm rounded-t-lg border-b-2 tab-inactive">
+                    Exam Timetable
+                </button>
+            </nav>
+        </div>
+
+        <!-- CONTENT PANELS -->
+        <main>
+            <!-- DASHBOARD PANEL -->
+            <div id="panel-dashboard" class="tab-panel">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Study Schedule Column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <h2 class="text-2xl font-bold text-white mb-2">Study Schedule & Task Tracker</h2>
+                        <!-- Schedule Cards will be inserted here by JS -->
+                        <div id="schedule-container" class="space-y-6"></div>
+                    </div>
+                    <!-- Subject Progress Column -->
+                    <div class="space-y-6">
+                         <h2 class="text-2xl font-bold text-white mb-2">Subject Progress</h2>
+                        <!-- Progress Cards will be inserted here by JS -->
+                        <div id="progress-container" class="space-y-6"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SYLLABUS PANEL -->
+            <div id="panel-syllabus" class="tab-panel hidden bg-gray-800 p-6 rounded-lg">
+                 <!-- Syllabus Accordions will be inserted here by JS -->
+                 <div id="syllabus-container" class="space-y-4"></div>
+            </div>
+
+            <!-- TIMETABLE PANEL -->
+            <div id="panel-timetable" class="tab-panel hidden bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-2xl font-bold text-white mb-4">Official Mid Term-1 Datesheet</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-700">
+                            <tr>
+                                <th class="p-3 font-semibold text-sm">Date</th>
+                                <th class="p-3 font-semibold text-sm">Day</th>
+                                <th class="p-3 font-semibold text-sm">Timing</th>
+                                <th class="p-3 font-semibold text-sm">Paper Code</th>
+                                <th class="p-3 font-semibold text-sm">Paper Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timetable-body" class="divide-y divide-gray-600">
+                             <!-- Timetable rows will be inserted here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- DATA STRUCTURES ---
+        
+        const subjects = {
+            'DAA': { name: 'Design & Analysis of Algorithm', code: 'BCS503', tasks: 0, completed: 0, color: 'bg-red-600' },
+            'OOSD': { name: 'Object Oriented System Design', code: 'BCS054', tasks: 0, completed: 0, color: 'bg-blue-600' },
+            'DBMS': { name: 'Database Management System', code: 'BCS501', tasks: 0, completed: 0, color: 'bg-green-600' },
+            'ELECTIVE': { name: 'Machine Learning / Soft Computing', code: 'BCS055/056', tasks: 0, completed: 0, color: 'bg-yellow-500' },
+            'WEBTECH': { name: 'Web Technology', code: 'BCS502', tasks: 0, completed: 0, color: 'bg-purple-600' }
+        };
+
+        const schedule = [
+            {
+                date: '2025-09-30',
+                day: 'Today (Tuesday)',
+                sessions: [
+                    { time: 'Evening (5:00 PM - 8:30 PM)', task: '<b>DAA (Unit 1):</b> Master all sorting algorithms (Shell, Quick, Merge, Heap) and their complexities.', subject: 'DAA', id: 'task-0-0' },
+                    { time: 'Night (9:30 PM - 12:30 AM)', task: '<b>DAA (Unit 1):</b> Focus on Growth of Functions (Big O, &Omega;, &Theta;) and analyzing algorithm performance.', subject: 'DAA', id: 'task-0-1' },
+                    { time: 'Late Night (12:30 AM - 2:30 AM)', task: '<b>DAA (Unit 2):</b> Learn the concepts of Red-Black Trees and B-Trees.', subject: 'DAA', id: 'task-0-2' },
+                ]
+            },
+            {
+                date: '2025-10-01',
+                day: 'Wednesday',
+                sessions: [
+                    { time: 'Evening (5:00 PM - 8:30 PM)', task: '<b>OOSD (Unit 1):</b> Cover all Object Orientation concepts (Encapsulation, polymorphism, etc.) and the basics of UML.', subject: 'OOSD', id: 'task-1-0' },
+                    { time: 'Night (9:30 PM - 12:30 AM)', task: '<b>OOSD (Unit 2):</b> Master Basic Structural Modeling: Classes, Relationships, and practice drawing Class & Object Diagrams.', subject: 'OOSD', id: 'task-1-1' },
+                    { time: 'Late Night (12:30 AM - 2:30 AM)', task: '<b>Intro to DBMS (Unit 1):</b> Start with Database concepts (vs File System) and Architecture.', subject: 'DBMS', id: 'task-1-2' },
+                ]
+            },
+            {
+                date: '2025-10-02',
+                day: 'Thursday',
+                sessions: [
+                    { time: 'Evening (5:00 PM - 8:30 PM)', task: '<b>DBMS (Unit 1):</b> Focus entirely on the ER Model. Practice drawing ER diagrams, understanding keys, generalization, and aggregation.', subject: 'DBMS', id: 'task-2-0' },
+                    { time: 'Night (9:30 PM - 12:30 AM)', task: '<b>DBMS (Unit 2):</b> Cover the Relational Data Model concepts, Integrity Constraints (Entity, Referential), and Relational Algebra.', subject: 'DBMS', id: 'task-2-1' },
+                    { time: 'Late Night (12:30 AM - 2:30 AM)', task: '<b>Intro to Elective (Unit 1):</b> Start your elective. Cover the introduction and core concepts.', subject: 'ELECTIVE', id: 'task-2-2' },
+                ]
+            },
+            {
+                date: '2025-10-03',
+                day: 'Friday',
+                sessions: [
+                    { time: 'Evening (5:00 PM - 8:30 PM)', task: '<b>Elective (Unit 1):</b> Finish and revise all of Unit 1 for your elective.', subject: 'ELECTIVE', id: 'task-3-0' },
+                    { time: 'Night (9:30 PM - 12:30 AM)', task: '<b>Elective (Unit 2):</b> Cover the first-half topics for Unit 2 of your elective.', subject: 'ELECTIVE', id: 'task-3-1' },
+                    { time: 'Late Night (12:30 AM - 2:30 AM)', task: '<b>Intro to Web Tech (Unit 1):</b> Start with HTML (Lists, Tables, Images, Forms) and the basics of XML (DTD, schemas).', subject: 'WEBTECH', id: 'task-3-2' },
+                ]
+            },
+            {
+                date: '2025-10-04',
+                day: 'Saturday',
+                sessions: [
+                    { time: 'Evening (5:00 PM - 8:30 PM)', task: '<b>Web Tech (Unit 1):</b> Finish and revise all of Unit 1.', subject: 'WEBTECH', id: 'task-4-0' },
+                    { time: 'Night (9:30 PM - 12:30 AM)', task: '<b>Web Tech (Unit 2):</b> Master the required CSS topics: Style sheets, properties, styling, Box Model, ID & Class selectors.', subject: 'WEBTECH', id: 'task-4-1' },
+                    { time: 'Late Night (12:30 AM - 2:30 AM)', task: '<b>DAA Full Revision:</b> Revise all DAA topics from Unit 1 and Unit 2 (half). Solve previous year questions (PYQs).', subject: 'DAA', id: 'task-4-2' },
+                ]
+            },
+            {
+                date: '2025-10-05',
+                day: 'Sunday (DAA FOCUS DAY)',
+                sessions: [
+                    { time: 'Evening (5:00 PM - 8:30 PM)', task: '<b>DAA PYQ Practice:</b> Solve at least 2-3 previous mid-term papers under timed conditions.', subject: 'DAA', id: 'task-5-0' },
+                    { time: 'Night (9:30 PM - 12:30 AM)', task: '<b>DAA Analysis & Revision:</b> Analyze your mistakes, re-read weak topics, and perfect your understanding.', subject: 'DAA', id: 'task-5-1' },
+                    { time: 'Late Night (12:30 AM - 2:30 AM)', task: '<b>Final Review & Relax:</b> Calmly scan DAA summary. Lightly review OOSD diagrams. SLEEP!', subject: 'OOSD', id: 'task-5-2' },
+                ]
+            },
+        ];
+
+        const syllabusData = [
+            { subject: 'DAA', title: 'BCS503: Design & Analysis of Algorithm', content: `
+                <h4 class='font-semibold text-indigo-300'>Unit 1:</h4>
+                <ul class='list-disc pl-5 mt-1 mb-3 text-gray-300'>
+                    <li>Introduction to Algorithms, Analyzing Algorithms, Complexity, Growth of Functions, Performance Measurements.</li>
+                    <li>Sorting and Order Statistics: Shell Sort, Quick Sort, Merge Sort, Heap Sort.</li>
+                    <li>Comparison of Sorting Algorithms, Sorting in Linear Time.</li>
+                </ul>
+                <h4 class='font-semibold text-indigo-300'>Unit 2 (First Half):</h4>
+                <ul class='list-disc pl-5 mt-1 text-gray-300'>
+                    <li>Advanced Data Structures: Red-Black Trees, B-Trees.</li>
+                </ul>` 
+            },
+            { subject: 'OOSD', title: 'BCS054: Object Oriented System Design', content: `
+                <h4 class='font-semibold text-indigo-300'>Unit 1:</h4>
+                <ul class='list-disc pl-5 mt-1 mb-3 text-gray-300'>
+                    <li>The meaning of Object Orientation, object identity, Encapsulation, information hiding, polymorphism, generosity.</li>
+                    <li>Importance and principles of modeling, object-oriented modeling.</li>
+                    <li>Introduction to UML, conceptual model of the UML, Architecture.</li>
+                </ul>
+                <h4 class='font-semibold text-indigo-300'>Unit 2 (First Half):</h4>
+                <ul class='list-disc pl-5 mt-1 text-gray-300'>
+                    <li>Basic Structural Modeling: Classes, Relationships, common Mechanisms, and diagrams.</li>
+                    <li>Class & Object Diagrams: Terms, concepts, and modeling techniques.</li>
+                </ul>` 
+            },
+            { subject: 'DBMS', title: 'BCS501: Database Management System', content: `
+                <h4 class='font-semibold text-indigo-300'>Unit 1:</h4>
+                <ul class='list-disc pl-5 mt-1 mb-3 text-gray-300'>
+                    <li>Overview, Database System vs File System, Database System Concept and Architecture, Data Model Schema and Instances, Data Independence, DDL, DML.</li>
+                    <li>ER Model Concepts, Notation for ER Diagram, Mapping Constraints, Keys (Super, Candidate, Primary), Generalization, Aggregation, Reduction of an ER Diagrams to Tables.</li>
+                </ul>
+                <h4 class='font-semibold text-indigo-300'>Unit 2 (First Half):</h4>
+                <ul class='list-disc pl-5 mt-1 text-gray-300'>
+                    <li>Relational Data Model Concepts, Integrity Constraints, Entity Integrity, Referential Integrity, Keys Constraints, Domain Constraints.</li>
+                    <li>Relational Algebra.</li>
+                </ul>` 
+            },
+            { subject: 'ELECTIVE', title: 'BCS055/056: Machine Learning / Soft Computing', content: `
+                <h4 class='font-bold text-indigo-300 mb-2'>BCS055: Machine Learning Techniques</h4>
+                <h5 class='font-semibold text-indigo-400'>Unit 1:</h5>
+                <ul class='list-disc pl-5 mt-1 mb-3 text-gray-300'>
+                    <li>Learning Types, Designing a Learning System, History of ML, Introduction to different ML Approaches, Issues in ML.</li>
+                </ul>
+                <h5 class='font-semibold text-indigo-400'>Unit 2 (First Half):</h5>
+                <ul class='list-disc pl-5 mt-1 text-gray-300'><li>REGRESSION: Linear Regression and Logistic Regression.</li></ul>
+                <hr class='my-4 border-gray-600'>
+                <h4 class='font-bold text-indigo-300 mb-2'>BCS056: Application of Soft Computing</h4>
+                <h5 class='font-semibold text-indigo-400'>Unit 1:</h5>
+                <ul class='list-disc pl-5 mt-1 mb-3 text-gray-300'>
+                    <li>Neuron, synapse, Artificial Neuron and its model, activation functions, neural network architecture (single/multilayer feed forward, recurrent).</li>
+                </ul>
+                <h5 class='font-semibold text-indigo-400'>Unit 2 (First Half):</h5>
+                <ul class='list-disc pl-5 mt-1 text-gray-300'><li>Architecture: perceptron model, solution, single layer artificial neural network, multilayer perception model.</li></ul>
+                ` 
+            },
+            { subject: 'WEBTECH', title: 'BCS502: Web Technology', content: `
+                <h4 class='font-semibold text-indigo-300'>Unit 1:</h4>
+                <ul class='list-disc pl-5 mt-1 mb-3 text-gray-300'>
+                    <li>Web Development Strategies, History of Web, Protocols, client-server computing.</li>
+                    <li>HTML: List, Table, Images, Frames, forms.</li>
+                    <li>XML: Document type definition (DTD), XML schemes, Object Models (DOM and SAX).</li>
+                </ul>
+                <h4 class='font-semibold text-indigo-300'>Unit 2 (First Half):</h4>
+                <ul class='list-disc pl-5 mt-1 text-gray-300'>
+                    <li>CSS: Creating Style Sheet, CSS Properties, CSS Styling (Background, Text, Fonts).</li>
+                    <li>Working with block elements, objects, Lists, and Tables.</li>
+                    <li>CSS Id and Class, Box Model (Border, Padding, Margin properties).</li>
+                </ul>` 
+            },
+        ];
+
+        const timetableData = [
+            { date: '6-Oct-25', day: 'Monday', time: '3:00PM TO 4:15PM', code: 'BCS503', name: 'Design & Analysis of Algorithm' },
+            { date: '7-Oct-25', day: 'Tuesday', time: '3:00PM TO 4:15PM', code: 'BCS054', name: 'Object Oriented System Design' },
+            { date: '8-Oct-25', day: 'Wednesday', time: '3:00PM TO 4:15PM', code: 'BCS501', name: 'Database Management System' },
+            { date: '9-Oct-25', day: 'Thursday', time: '3:00PM TO 4:15PM', code: 'BCS056/055', name: 'Application of Soft Computing / Machine Learning Techniques' },
+            { date: '10-Oct-25', day: 'Friday', time: '3:00PM TO 4:15PM', code: 'BCS502', name: 'Web Technology' }
+        ];
+
+        // --- INITIALIZATION ---
+
+        function initializeApp() {
+            countTotalTasks();
+            renderSchedule();
+            renderProgressBars();
+            renderSyllabus();
+            renderTimetable();
+            loadState();
+            updateAllProgress();
+            startCountdown();
+            setupTabListeners();
+            highlightCurrentDay();
+        }
+
+        // --- COUNTDOWN TIMER ---
+        
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdown-timer');
+            const examDate = new Date('October 6, 2025 15:00:00').getTime();
+
+            const timer = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = examDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timer);
+                    countdownElement.innerHTML = "Exams have started! Good luck!";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                countdownElement.innerHTML = `Time until first exam: <strong>${days}d ${hours}h ${minutes}m ${seconds}s</strong>`;
+            }, 1000);
+        }
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderSchedule() {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = schedule.map((day, dayIndex) => `
+                <div id="day-card-${day.date}" class="bg-gray-800 rounded-lg shadow-md p-4 transition-all duration-300">
+                    <h3 class="text-xl font-bold text-indigo-400 mb-3">${day.day} - <span class="text-gray-400 font-medium text-lg">${new Date(day.date.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</span></h3>
+                    <div class="space-y-3">
+                        ${day.sessions.map((session, sessionIndex) => `
+                            <div class="flex items-start bg-gray-700 p-3 rounded-md">
+                                <input type="checkbox" id="${session.id}" data-subject="${session.subject}">
+                                <label for="${session.id}" class="flex-1 text-gray-300">
+                                    <span class="font-semibold text-white block">${session.time}</span>
+                                    <span class="text-sm">${session.task}</span>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            // Add event listeners after rendering
+            container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', handleTaskCompletion);
+            });
+        }
+
+        function renderProgressBars() {
+            const container = document.getElementById('progress-container');
+            container.innerHTML = Object.keys(subjects).map(key => `
+                <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-1">
+                        <h4 class="font-bold text-white">${subjects[key].name}</h4>
+                        <span id="progress-text-${key}" class="text-sm font-semibold text-gray-300">0%</span>
+                    </div>
+                    <div class="progress-bar-bg rounded-full h-4">
+                        <div id="progress-bar-${key}" class="${subjects[key].color} h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderSyllabus() {
+            const container = document.getElementById('syllabus-container');
+            container.innerHTML = syllabusData.map(item => `
+                <details class="bg-gray-700 rounded-lg overflow-hidden">
+                    <summary class="font-semibold text-lg p-4 cursor-pointer hover:bg-gray-600 transition-colors flex justify-between items-center">
+                        <span>${subjects[item.subject].name} (${item.title})</span>
+                        <svg class="w-5 h-5 transition-transform duration-300 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </summary>
+                    <div class="p-4 border-t border-gray-600">
+                        ${item.content}
+                    </div>
+                </details>
+            `).join('');
+
+             container.querySelectorAll('details').forEach(detail => {
+                detail.addEventListener('toggle', (event) => {
+                    const summary = event.target.querySelector('summary');
+                    const icon = summary.querySelector('svg');
+                    if (event.target.open) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+        }
+        
+        function renderTimetable() {
+            const container = document.getElementById('timetable-body');
+            container.innerHTML = timetableData.map(row => `
+                <tr class="hover:bg-gray-700">
+                    <td class="p-3">${row.date}</td>
+                    <td class="p-3">${row.day}</td>
+                    <td class="p-3">${row.time}</td>
+                    <td class="p-3">${row.code}</td>
+                    <td class="p-3 font-medium text-white">${row.name}</td>
+                </tr>
+            `).join('');
+        }
+        
+
+        // --- LOGIC FUNCTIONS ---
+        
+        function countTotalTasks() {
+            schedule.forEach(day => {
+                day.sessions.forEach(session => {
+                    if (subjects[session.subject]) {
+                        subjects[session.subject].tasks++;
+                    }
+                });
+            });
+        }
+        
+        function handleTaskCompletion(event) {
+            updateAllProgress();
+            saveState();
+        }
+
+        function updateAllProgress() {
+            let totalCompletedTasks = 0;
+            let totalTasks = 0;
+            
+            // Reset completed counts
+            Object.keys(subjects).forEach(key => subjects[key].completed = 0);
+            
+            // Recalculate completed tasks
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                const subjectKey = checkbox.dataset.subject;
+                if (subjects[subjectKey]) {
+                    subjects[subjectKey].completed++;
+                }
+            });
+
+            // Update individual subject progress bars
+            Object.keys(subjects).forEach(key => {
+                const subject = subjects[key];
+                const percentage = subject.tasks > 0 ? (subject.completed / subject.tasks) * 100 : 0;
+                
+                document.getElementById(`progress-bar-${key}`).style.width = `${percentage}%`;
+                document.getElementById(`progress-text-${key}`).textContent = `${Math.round(percentage)}%`;
+                
+                totalCompletedTasks += subject.completed;
+                totalTasks += subject.tasks;
+            });
+
+            // Update overall progress bar
+            const overallPercentage = totalTasks > 0 ? (totalCompletedTasks / totalTasks) * 100 : 0;
+            document.getElementById('overall-progress-bar').style.width = `${overallPercentage}%`;
+            document.getElementById('overall-progress-text').textContent = `${Math.round(overallPercentage)}%`;
+        }
+        
+        // --- STATE MANAGEMENT ---
+        
+        function saveState() {
+            const completedTasks = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                completedTasks.push(checkbox.id);
+            });
+            localStorage.setItem('examPrepState', JSON.stringify(completedTasks));
+        }
+
+        function loadState() {
+            const savedState = JSON.parse(localStorage.getItem('examPrepState'));
+            if (savedState) {
+                savedState.forEach(id => {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+        }
+        
+        // --- UI UTILITIES ---
+
+        function setupTabListeners() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const panels = document.querySelectorAll('.tab-panel');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetPanelId = 'panel-' + tab.id.split('-')[1];
+
+                    tabs.forEach(t => {
+                        t.classList.remove('tab-active');
+                        t.classList.add('tab-inactive');
+                    });
+                    tab.classList.remove('tab-inactive');
+                    tab.classList.add('tab-active');
+
+                    panels.forEach(panel => {
+                        if (panel.id === targetPanelId) {
+                            panel.classList.remove('hidden');
+                        } else {
+                            panel.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        }
+        
+        function highlightCurrentDay() {
+            const today = new Date();
+            // Adjust for timezone differences if needed, here assuming user is in IST (UTC+5:30)
+            const offset = today.getTimezoneOffset() * 60 * 1000;
+            const istTime = new Date(today.getTime() + (330 * 60 * 1000)); // +5.5 hours for IST
+            
+            const todayStr = istTime.toISOString().split('T')[0];
+
+            const todayCard = document.getElementById(`day-card-${todayStr}`);
+            if (todayCard) {
+                todayCard.classList.add('current-day');
+            }
+        }
+
+        // --- START THE APP ---
+        initializeApp();
+    });
+</script>
+</body>
+</html>
